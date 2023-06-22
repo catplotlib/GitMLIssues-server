@@ -1,0 +1,12 @@
+[
+  {
+    "owner": "pytorch",
+    "repo": "pytorch",
+    "type": "protocol'"
+  },
+  {
+    "owner": "tensorflow",
+    "repo": "tensorflow",
+    "type": "protocol"
+  }
+]
