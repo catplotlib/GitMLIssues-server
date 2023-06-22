@@ -6,6 +6,7 @@ from pathlib import Path
 
 BASE_DIR = Path(__file__).resolve().parent.parent.parent
 
+
 class Command(BaseCommand):
     help = 'Load projects and issues from GitHub API'
 
@@ -28,9 +29,11 @@ class Command(BaseCommand):
                 # Create a project model
                 Project.objects.create(
                     repository=project_data['repo'],
-                    desc=repo_details['description'],  # Fetch description from the GitHub API
+                    # Fetch description from the GitHub API
+                    desc=repo_details['description'],
                     owner=project_data['owner'],
-                    lang=repo_details['language']  # Fetch language from the GitHub API
+                    # Fetch language from the GitHub API
+                    lang=repo_details['language']
                 )
                 # Fetch issues from the GitHub API
                 response = requests.get(
@@ -45,14 +48,21 @@ class Command(BaseCommand):
                 # Parse the response JSON
                 issues = response.json()
                 # Create an issue model for each issue
-                for issue in issues[:5]:
+                issue_count = 0
+                for issue in issues:
+                    # Skip pull requests
+                    if 'pull_request' in issue:
+                        continue
                     Issue.objects.create(
                         repository=project_data['repo'],
                         title=issue['title'],
                         # Join labels with a comma
-                        labels=", ".join([label['name']
-                                          for label in issue['labels']]),
+                        labels=", ".join([label['name'] for label in issue['labels']]),
                         owner=issue['user']['login'],
                         url=issue['html_url']
                     )
+                    issue_count += 1
+                    if issue_count >= 7:
+                        break
+
         self.stdout.write(self.style.SUCCESS('Data imported successfully'))

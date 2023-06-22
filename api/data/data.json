@@ -1,12 +1,22 @@
 [
   {
     "owner": "pytorch",
-    "repo": "pytorch",
-    "type": "protocol'"
+    "repo": "pytorch"
   },
   {
     "owner": "tensorflow",
-    "repo": "tensorflow",
-    "type": "protocol"
+    "repo": "tensorflow"
+  },
+  {
+    "owner": "scikit-learn",
+    "repo": "scikit-learn"
+  },
+  {
+    "owner": "magenta",
+    "repo": "magenta"
+  },
+  {
+    "owner": "facebookresearch",
+    "repo": "ParlAI"
   }
 ]
