@@ -1,6 +1,6 @@
 from django.core.management.base import BaseCommand
 import json
-import requests  # Import the requests library
+import requests
 from api.models import Project, Issue
 from pathlib import Path
 
@@ -26,16 +26,20 @@ class Command(BaseCommand):
                     continue
                 # Parse the response JSON
                 repo_details = response.json()
-                # Create a project model
-                Project.objects.create(
+                # Create or update a project model
+                Project.objects.update_or_create(
                     repository=project_data['repo'],
-                    # Fetch description from the GitHub API
-                    desc=repo_details['description'],
-                    owner=project_data['owner'],
-                    # Fetch language from the GitHub API
-                    lang=repo_details['language'],
-                    repo=repo_details['html_url']
+                    defaults={
+                        # Fetch description from the GitHub API
+                        'desc': repo_details['description'],
+                        'owner': project_data['owner'],
+                        # Fetch language from the GitHub API
+                        'lang': repo_details['language'],
+                        'repo': repo_details['html_url']
+                    }
                 )
+                # Remove old issues
+                Issue.objects.filter(repository=project_data['repo']).delete()
                 # Fetch issues from the GitHub API
                 response = requests.get(
                     f"https://api.github.com/repos/{project_data['owner']}/{project_data['repo']}/issues",
@@ -58,10 +62,12 @@ class Command(BaseCommand):
                         repository=project_data['repo'],
                         title=issue['title'],
                         # Join labels with a comma
-                        labels=", ".join([label['name'] for label in issue['labels']]),
+                        labels=", ".join([label['name']
+                                         for label in issue['labels']]),
                         owner=issue['user']['login'],
                         url=issue['html_url']
                     )
+
                     issue_count += 1
                     if issue_count >= 7:
                         break
