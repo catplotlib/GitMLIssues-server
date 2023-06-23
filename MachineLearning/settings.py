@@ -25,7 +25,7 @@ SECRET_KEY = 'django-insecure-t##r$uemdmtj6-izglos&y#^65eda4n6^1ba))k-i5hzc$cnkl
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['catplotlib.pythonanywhere.com']
+ALLOWED_HOSTS = ['catplotlib.pythonanywhere.com','localhost']
 
 
 # Application definition

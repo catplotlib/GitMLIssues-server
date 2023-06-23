@@ -33,7 +33,8 @@ class Command(BaseCommand):
                     desc=repo_details['description'],
                     owner=project_data['owner'],
                     # Fetch language from the GitHub API
-                    lang=repo_details['language']
+                    lang=repo_details['language'],
+                    repo=repo_details['html_url']
                 )
                 # Fetch issues from the GitHub API
                 response = requests.get(
